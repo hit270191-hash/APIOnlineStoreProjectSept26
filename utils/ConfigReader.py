@@ -1,0 +1,13 @@
+import os
+import configparser
+
+config= configparser.RawConfigParser()
+
+path= os.path.abspath(os.path.join(os.path.dirname(__file__), "../configurations/config.ini"))
+
+config.read(path)
+
+class ReadConfig:
+    @staticmethod
+    def get_property(option):
+        return config.get("commonInfo", option)
