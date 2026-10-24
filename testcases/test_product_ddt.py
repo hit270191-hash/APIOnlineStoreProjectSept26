@@ -46,6 +46,9 @@ class TestProduct:
         print("Record deleted...")
 
 
+
+# To generate Report run the following commands
+
 #HTML Report
 
 #  pytest -v -s --html=reports/report.html .\testcases\test_product_ddt.py
