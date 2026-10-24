@@ -1,8 +1,8 @@
+
 pipeline {
     agent any
 
     stages {
-
         stage('Verify Workspace') {
             steps {
                 bat 'dir'
@@ -14,37 +14,42 @@ pipeline {
                 bat 'run.bat'
             }
         }
-
-        stage('List Allure Results') {
-            steps {
-                bat 'dir allure-results'
-            }
-        }
-
-        stage('Allure Report') {
-            steps {
-                allure([
-                    includeProperties: false,
-                    jdk: '',
-                    results: [[path: 'allure-results']]
-                ])
-            }
-        }
     }
 
     post {
-
         always {
-            archiveArtifacts artifacts: 'reports/report.html',
-                             allowEmptyArchive: true
+            script {
+                echo 'Checking Allure results...'
+
+                if (fileExists('allure-results')) {
+                    bat 'dir allure-results'
+
+                    echo 'Publishing Allure report...'
+
+                    allure([
+                        includeProperties: false,
+                        jdk: '',
+                        results: [[path: 'allure-results']]
+                    ])
+                } else {
+                    echo 'Allure results directory not found.'
+                }
+            }
+
+            echo 'Archiving test artifacts...'
+
+            archiveArtifacts(
+                artifacts: 'reports/report.html, allure-results/**',
+                allowEmptyArchive: true
+            )
         }
 
         success {
-            echo 'Build completed successfully'
+            echo 'Build completed successfully.'
         }
 
         failure {
-            echo 'Build failed'
+            echo 'Build failed. Check the test results and Allure report.'
         }
     }
 }

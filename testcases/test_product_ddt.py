@@ -57,3 +57,5 @@ class TestProduct:
 #pytest -s -v --alluredir=reports\allure-result .\testcases\test_product_ddt.py
 #allure generate reports\allure-result -o reports\allure-html --clean
 #allure open .\reports\allure-html
+
+#to run jenkins locally: java -jar jenkins.war
